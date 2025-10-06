@@ -4,8 +4,8 @@ document.addEventListener('DOMContentLoaded', () => {
 	const taskList = document.getElementById('task-list');
 	const emptyImage = document.querySelector('.some-img');
 	const toDOs = document.querySelector('.to-dos');
-	const progressBar = document.getElementById('.progress');
-	const progressNums = document.getElementById('.numbers');
+	const progressBar = document.getElementById('progress');
+	const progressNums = document.getElementById('numbers');
 
 	const checkState = () => {
 		emptyImage.style.display =

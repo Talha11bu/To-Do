@@ -16,11 +16,14 @@ document.addEventListener('DOMContentLoaded', () => {
 	const updateProgress = (checkCompletion = true) => {
 		const totalTasks = taskList.children.length;
 		const completedTasks =
-			taskList.querySelectorAll('.checkboc:checked').length;
+			taskList.querySelectorAll('.checkbox:checked').length;
 		progressBar.style.width = totalTasks
 			? `${(completedTasks / totalTasks) * 100}%`
 			: '0%';
 		progressNums.textContent = `${completedTasks} / ${totalTasks}`;
+		if (checkCompletion && totalTasks > 0 && completedTasks === totalTasks) {
+			Confetti();
+		}
 	};
 
 	const saveTasksLocally = () => {
@@ -29,6 +32,15 @@ document.addEventListener('DOMContentLoaded', () => {
 			completed: li.querySelector('.checkbox').checked,
 		}));
 		localStorage.setItem('tasks', JSON.stringify(tasks));
+	};
+
+	const loadLocalTasks = () => {
+		const savedTasks = JSON.parse(localStorage.getItem('tasks')) || [];
+		savedTasks.forEach(({ text, completed }) =>
+			addTask(text, completed, false)
+		);
+		checkState();
+		updateProgress();
 	};
 
 	const addTask = (text, completed = false, checkCompletion = true) => {
@@ -93,4 +105,47 @@ document.addEventListener('DOMContentLoaded', () => {
 			addTask();
 		}
 	});
+	loadLocalTasks();
 });
+
+const Confetti = () => {
+	const count = 200,
+		defaults = {
+			origin: { y: 0.7 },
+		};
+
+	function fire(particleRatio, opts) {
+		confetti(
+			Object.assign({}, defaults, opts, {
+				particleCount: Math.floor(count * particleRatio),
+			})
+		);
+	}
+
+	fire(0.25, {
+		spread: 26,
+		startVelocity: 55,
+	});
+
+	fire(0.2, {
+		spread: 60,
+	});
+
+	fire(0.35, {
+		spread: 100,
+		decay: 0.91,
+		scalar: 0.8,
+	});
+
+	fire(0.1, {
+		spread: 120,
+		startVelocity: 25,
+		decay: 0.92,
+		scalar: 1.2,
+	});
+
+	fire(0.1, {
+		spread: 120,
+		startVelocity: 45,
+	});
+};
